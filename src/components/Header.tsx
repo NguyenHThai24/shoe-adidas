@@ -1,94 +1,114 @@
 import { Link } from 'react-router-dom'
 import logoIMG from '../assets/logo.png'
-function Header() {
-  return (
-    <header className='w-full flex items-center justify-center px-6 py-8 bg-white'>
-      {/* Wrapper — cho phép logo tràn ra ngoài thanh */}
-      <div className='relative w-full max-w-4xl flex items-center'>
+import { Z, HEADER_HEIGHT, HEADER_TOP, COLOR } from '../constants/theme'
 
-        {/* Thanh nền xanh lá bo tròn */}
+// ─── Sub-components ────────────────────────────────────────────
+
+function NavLinks() {
+  return (
+    <nav className='flex items-center gap-5 pl-6 pr-4 flex-shrink-0'>
+      <span className='w-px h-5 rounded-full inline-block' style={{ backgroundColor: COLOR.greenPrimary }} />
+      {[
+        { to: '/',         label: 'Home'     },
+        { to: '/products', label: 'Products' },
+      ].map(({ to, label }) => (
+        <Link
+          key={to}
+          to={to}
+          className='text-white font-semibold text-sm tracking-wide whitespace-nowrap
+                     hover:text-green-900 transition-colors'
+        >
+          {label}
+        </Link>
+      ))}
+    </nav>
+  )
+}
+
+function SearchBar() {
+  return (
+    <div className='flex flex-1 items-center pr-3'>
+      <div className='flex items-center gap-2 w-full rounded-full px-4 py-1.5
+                      bg-white/30 hover:bg-white/50 transition cursor-text'>
+        <svg xmlns='http://www.w3.org/2000/svg' className='w-4 h-4 text-white flex-shrink-0'
+             fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={2.5}>
+          <path strokeLinecap='round' strokeLinejoin='round'
+                d='M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z' />
+        </svg>
+        <input
+          type='text'
+          placeholder='Search...'
+          className='flex-1 bg-transparent outline-none text-white
+                     placeholder:text-white/80 text-sm'
+        />
+      </div>
+    </div>
+  )
+}
+
+function Logo() {
+  return (
+    <div
+      className='absolute left-1/2 -translate-x-1/2 -translate-y-1/2
+                 flex items-center justify-center overflow-hidden
+                 bg-white shadow-lg'
+      style={{
+        top: '50%',
+        zIndex: Z.header + 1, // logo nổi trên thanh header
+        width: 88, height: 88,
+        border: `3.5px solid ${COLOR.gold}`,
+        borderRadius: '50%',
+      }}
+    >
+      <img
+        src={logoIMG}
+        alt='Logo'
+        className='w-full h-full object-cover object-center rounded-full'
+      />
+    </div>
+  )
+}
+
+// ─── Header ───────────────────────────────────────────────────
+
+export default function Header() {
+  return (
+    <header
+      style={{
+        position: 'fixed',
+        top: HEADER_TOP,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: 'calc(100% - 80px)', // margin 40px mỗi bên
+        maxWidth: 960,
+        height: HEADER_HEIGHT,
+        zIndex: Z.header,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'white',
+        borderRadius: 16,
+        boxShadow: '0 2px 16px rgba(0,0,0,0.10)',
+        padding: '0 24px',
+        border: `1.5px solid ${COLOR.greenLight}`,
+      }}
+    >
+      {/* Inner wrapper — cho logo absolute */}
+      <div className='relative w-full flex items-center'>
+
+        {/* Thanh xanh lá bo tròn */}
         <div
           className='w-full flex items-center rounded-full h-14'
-          style={{ backgroundColor: '#7BC67E' }}
+          style={{ backgroundColor: COLOR.greenLight }}
         >
-          {/* NAV — bên trái */}
-          <nav className='flex items-center gap-5 pl-6 pr-4 w-full flex-shrink-0'>
-            <span
-              className='w-px h-5 rounded-full inline-block'
-              style={{ backgroundColor: '#2E7D32' }}
-            />
-            <Link
-              to='/'
-              className='text-white font-semibold text-sm tracking-wide hover:text-green-900 transition-colors whitespace-nowrap'
-            >
-              Home
-            </Link>
-            <Link
-              to='/products'
-              className='text-white font-semibold text-sm tracking-wide hover:text-green-900 transition-colors whitespace-nowrap'
-            >
-              Products
-            </Link>
-          </nav>
-
-          {/* Chỗ trống giữa — nhường chỗ cho logo */}
+          <NavLinks />
+          {/* Khoảng trống giữa nhường chỗ logo */}
           <div className='flex-shrink-0 w-28' />
-
-          {/* SEARCH full width bên phải */}
-          <div className='flex flex-1 items-center pr-3 w-full'>
-            <div className='flex items-center gap-2 bg-white bg-opacity-30 rounded-full px-4 py-1.5 w-full hover:bg-opacity-50 transition cursor-text'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                className='w-4 h-4 text-white flex-shrink-0'
-                fill='none'
-                viewBox='0 0 24 24'
-                stroke='currentColor'
-                strokeWidth={2.5}
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z'
-                />
-              </svg>
-              <input
-                type='text'
-                placeholder='Search...'
-                className='bg-transparent outline-none text-white placeholder-white placeholder-opacity-80 text-sm w-full'
-              />
-            </div>
-          </div>
+          <SearchBar />
         </div>
 
-        {/* LOGO — nổi lên giữa, vượt ra ngoài thanh */}
-        <div
-          className='absolute left-1/2 bg-white shadow-lg flex items-center justify-center overflow-hidden'
-          style={{
-            transform: 'translate(-50%, -50%)',
-            top: '50%',
-            zIndex: 10,
-            width: '88px',
-            height: '88px',
-            border: '3.5px solid #F5A623',
-            borderRadius: '50%',
-          }}
-        >
-          <img
-            src={logoIMG}
-            alt="Logo"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              objectPosition: 'center',
-              borderRadius: '50%',
-            }}
-          />
-        </div>
-
+        <Logo />
       </div>
     </header>
   )
 }
-
-export default Header
